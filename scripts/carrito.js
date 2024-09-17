@@ -7,7 +7,7 @@ export function addCart (item) {
 	addCartAlert(item)
 }
 
-let cartList = document.getElementById("carritoElements")
+let cartList = document.getElementById("cart-elements")
 
 function parseCart () {
 	if (localStorage.getItem("carrito") == null || localStorage.getItem("carrito") == "null")
@@ -42,7 +42,7 @@ function displayCart() {
 			let productName = document.createElement("span")
 			let productQuantity = document.createElement("b")
 			let productRemove =document.createElement("button")
-			product.className="carritoItem"
+			product.className="cart-item"
 			productName.textContent = itemKey
 			productQuantity.textContent = "x"+quantities[itemKey]
 			productRemove.textContent="Quitar"
@@ -68,11 +68,11 @@ function displayCart() {
 	}
 }
 
-document.getElementById("carrito").addEventListener("click", () => {
-	let cartDisplay = document.getElementById("carritoDisplay")
+document.getElementById("cart").addEventListener("click", () => {
+	let cartDisplay = document.getElementById("cart-display")
 	displayCart()
-	cartDisplay.style.animation = "showCarrito 0.25s forwards"
-	document.getElementById("cerrarCarrito").addEventListener("click", () => {
-		cartDisplay.style.animation = "hideCarrito 0.25s"
+	cartDisplay.style.animation = "show-cart 0.25s forwards"
+	document.getElementById("close-cart").addEventListener("click", () => {
+		cartDisplay.style.animation = "hide-cart 0.25s"
 	})
 })

@@ -1,47 +1,68 @@
 import { addCart } from "./carrito.js"
 
-let catalogue = document.getElementById("main")
-let onCatalogue = []
-let playingMusic = false;
+let catalogue = null
+let url = "https://fakestoreapi.com/products"
 
 export let products = null
 
-async function loadCatalogue() {
-	try {
-		const response = await fetch("https://api.escuelajs.co/api/v1/products")
-		products = await response.json()
+async function loadCategories() {
+	const categoryFetch = await fetch("https://fakestoreapi.com/products/categories")
+	categories = await categoryFetch.json()
+	categories.forEach((category) => {
+		console.log(category)
+	})
+}
 
+async function loadCatalogue(filter=null) {
+	try {
+		catalogue.innerHTML = ""
+		const response = await fetch(url)
+		products = await response.json()
+		if (filter == "expensive") {
+			products.sort((item, secondItem) => {
+				if (item.price < secondItem.price)
+					return 1
+				else
+					return -1
+			})
+		} else if (filter == "cheaper") {
+			products.sort((item, secondItem) => {
+				if (item.price > secondItem.price)
+					return 1
+				else
+					return -1
+			})
+		}
 		products.forEach((product, i) => {
-			if (!onCatalogue.includes(i)) {
-				const { title, images, price, category, description } = product
-				const container = document.createElement("article")
-				const name = document.createElement("h2")
-				const image = document.createElement("img")
-				const button = document.createElement("button")
-				const priceValue = document.createElement("h3")
-				const cath = document.createElement("span")
-				const desc = document.createElement("p")
-	
-				container.className = "producto"
-				name.textContent = title
-				image.src = images[0].replaceAll('"', "").replaceAll("[", "").replaceAll("]", "")
-				button.textContent = "Adquirir"
-				button.addEventListener("click", () => {addCart(i)})
-				priceValue.textContent = price+"$"
-				container.id = i
-				cath.className = "category"
-				desc.className = "desc"
-				cath.textContent = category["name"]
-				desc.textContent = description
-				container.appendChild(name)
-				container.appendChild(image)
-				container.appendChild(priceValue)
-				container.appendChild(cath)
-				container.appendChild(desc)
-				container.appendChild(button)
-				catalogue.appendChild(container)
-				onCatalogue.push(i)
-			}
+			const { title, image, price, category, description } = product
+			const container = document.createElement("article")
+			const name = document.createElement("h2")
+			const imageContainer = document.createElement("img")
+			const button = document.createElement("button")
+			const priceValue = document.createElement("h3")
+			const cath = document.createElement("span")
+			const desc = document.createElement("p")
+
+			container.className = "product"
+			name.textContent = title
+			imageContainer.src = image
+			button.textContent = "Adquirir"
+			button.addEventListener("click", () => {
+				addCart(product)
+			})
+			priceValue.textContent = price+"$"
+			container.id = i
+			cath.className = "category"
+			desc.className = "desc"
+			cath.textContent = category["name"]
+			desc.textContent = description
+			container.appendChild(name)
+			container.appendChild(imageContainer)
+			container.appendChild(priceValue)
+			container.appendChild(cath)
+			container.appendChild(desc)
+			container.appendChild(button)
+			catalogue.appendChild(container)
 		})
 	} catch (error) {
 		console.error(error)
@@ -50,20 +71,14 @@ async function loadCatalogue() {
 	}
 }
 
-export function addCatalogue (name, priceNumber, img) {
-	products.push({
-		"nombre": name,
-		"img": img,
-		"precio": price
+window.addEventListener("DOMContentLoaded", () => {
+	catalogue = document.getElementById("container-products")
+	document.getElementById("filter-expensive").addEventListener("click", () => {
+		loadCatalogue("expensive")
 	})
-	loadCatalogue()
-}
-
-document.getElementById("footer").addEventListener("click", () => {
-	let themenoid = new Audio("https://vgmtreasurechest.com/soundtracks/club-penguin-original-soundtrack/eayrodluzi/29.%20Charlie%27s%20Here.mp3");
-    if (!playingMusic)
-        themenoid.play()
-    playingMusic = true;
+	document.getElementById("filter-cheaper").addEventListener("click", () => {
+		loadCatalogue("cheaper")
+	})
+	loadCategories();
+	loadCatalogue();
 })
-
-window.addEventListener("DOMContentLoaded", loadCatalogue)

@@ -10,18 +10,25 @@
 	<body>
 		<header>
 			<h1>Normal store for normal people</h1>
-			<button id="carrito">
+			<button id="cart">
 				<img src="https://cdn-icons-png.flaticon.com/128/3144/3144456.png">
 			</button>
 		</header>
 		<main id="main">
-		</main>
-		<aside id="carritoDisplay">
-			<div id="topCarritoDisplay" class="carritoItem">
-				<h2>Carrito</h2>
-				<button id="cerrarCarrito">>></button>
+			<div id="filters">
+				<span>Organizar por <button id="filter-expensive">Más caro</button><button id="filter-cheaper">Más barato</button></span>
+				<select id="categories">
+					<option value="">Seleccionar por categoría</option>
+				</select>
 			</div>
-			<div id="carritoElements">
+			<div id="container-products"></div>
+		</main>
+		<aside id="cart-display">
+			<div id="top-cart-display" class="cartItem">
+				<h2>Carrito</h2>
+				<button id="close-cart">>></button>
+			</div>
+			<div id="cart-elements">
 
 			</div>
 		</aside>
