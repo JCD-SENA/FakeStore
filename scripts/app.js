@@ -7,9 +7,12 @@ export let products = null
 
 async function loadCategories() {
 	const categoryFetch = await fetch("https://fakestoreapi.com/products/categories")
-	categories = await categoryFetch.json()
+	const categories = await categoryFetch.json()
 	categories.forEach((category) => {
-		console.log(category)
+		const option = document.createElement("option")
+		option.value = category
+		option.textContent = category
+		document.getElementById("categories").appendChild(option)
 	})
 }
 
