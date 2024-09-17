@@ -1,7 +1,8 @@
-import { addCart } from "./carrito.js"
+import { addCart } from "./cart.js"
+import { createUser } from "./session.js"
 
 let catalogue = null
-let url = "https://fakestoreapi.com/products"
+let filter = {}
 
 export let products = null
 
@@ -16,9 +17,12 @@ async function loadCategories() {
 	})
 }
 
-async function loadCatalogue(filter=null) {
+async function loadCatalogue() {
 	try {
 		catalogue.innerHTML = ""
+		let url = "https://fakestoreapi.com/products"
+		if (filter["category"] != undefined && filter["category"] != "")
+			url = "https://fakestoreapi.com/products/category/"+filter.category
 		const response = await fetch(url)
 		products = await response.json()
 		if (filter != null) {
@@ -40,36 +44,34 @@ async function loadCatalogue(filter=null) {
 		}
 		products.forEach((product, i) => {
 			const { title, image, price, category, description } = product
-			if ((filter != null && filter["category"] == category) || filter == null) {
-				const container = document.createElement("article")
-				const name = document.createElement("h2")
-				const imageContainer = document.createElement("img")
-				const button = document.createElement("button")
-				const priceValue = document.createElement("h3")
-				const cath = document.createElement("span")
-				const desc = document.createElement("p")
+			const container = document.createElement("article")
+			const name = document.createElement("h2")
+			const imageContainer = document.createElement("img")
+			const button = document.createElement("button")
+			const priceValue = document.createElement("h3")
+			const cath = document.createElement("span")
+			const desc = document.createElement("p")
 
-				container.className = "product"
-				name.textContent = title
-				imageContainer.src = image
-				button.textContent = "Adquirir"
-				button.addEventListener("click", () => {
-					addCart(product)
-				})
-				priceValue.textContent = price+"$"
-				container.id = i
-				cath.className = "category"
-				desc.className = "desc"
-				cath.textContent = category["name"]
-				desc.textContent = description
-				container.appendChild(name)
-				container.appendChild(imageContainer)
-				container.appendChild(priceValue)
-				container.appendChild(cath)
-				container.appendChild(desc)
-				container.appendChild(button)
-				catalogue.appendChild(container)
-			}
+			container.className = "product"
+			name.textContent = title
+			imageContainer.src = image
+			button.textContent = "Adquirir"
+			button.addEventListener("click", () => {
+				addCart(product)
+			})
+			priceValue.textContent = price+"$"
+			container.id = i
+			cath.className = "category"
+			desc.className = "desc"
+			cath.textContent = category["name"]
+			desc.textContent = description
+			container.appendChild(name)
+			container.appendChild(imageContainer)
+			container.appendChild(priceValue)
+			container.appendChild(cath)
+			container.appendChild(desc)
+			container.appendChild(button)
+			catalogue.appendChild(container)
 		})
 		
 	} catch (error) {
@@ -82,20 +84,18 @@ async function loadCatalogue(filter=null) {
 window.addEventListener("DOMContentLoaded", () => {
 	catalogue = document.getElementById("container-products")
 	document.getElementById("filter-expensive").addEventListener("click", () => {
-		loadCatalogue({
-			priceFilter: "expensive"
-		})
+		filter["priceFilter"] = "expensive"
+		loadCatalogue()
 	})
 	document.getElementById("filter-cheaper").addEventListener("click", () => {
-		loadCatalogue({
-			priceFilter: "cheaper"
-		})
+		filter["priceFilter"] = "cheaper"
+		loadCatalogue()
 	})
 	document.getElementById("categories").addEventListener("change", (e) => {
-		loadCatalogue({
-			category: e.srcElement.value
-		})
+		filter["category"] = e.srcElement.value
+		loadCatalogue()
 	})
-	loadCategories();
-	loadCatalogue();
+	createUser()
+	loadCategories()
+	loadCatalogue()
 })

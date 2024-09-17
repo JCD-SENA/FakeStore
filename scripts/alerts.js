@@ -1,6 +1,4 @@
-import { products } from "./app.js"
-
-export function addCartAlert(item) {
+export function addCartAlert(msg) {
     let background = document.createElement("div")
     let messageItself = document.createElement("div")
     let text = document.createElement("h2")
@@ -9,7 +7,7 @@ export function addCartAlert(item) {
     messageItself.className = "product"
     messageItself.id = "AlertMessageItself"
     button.textContent = "Ok"
-    text.textContent = "Se ha añadido el producto \""+item.title+"\" al carrito!"
+    text.textContent = msg
     
     button.addEventListener("click", (element) => {
         document.body.removeChild(background)
