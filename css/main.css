@@ -194,7 +194,7 @@ article.product > img {
 }
 
 .cart-item {
-	width: 90%;
+	width: 95%;
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
@@ -202,11 +202,17 @@ article.product > img {
 }
 
 .cart-item > span {
-	width: 80%;
+	width: 70%;
 }
 
 .cart-item > b {
+	color: goldenrod;
+	font-weight: bold;
+}
+
+.cart-item > .quantity {
 	text-align: center;
+	color: black;
 }
 
 .cart-item > button {
